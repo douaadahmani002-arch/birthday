@@ -11,9 +11,13 @@
         .active { display: flex; flex-direction: column; align-items: center; }
         h1 { font-size: 24px; text-shadow: 0 0 10px #ff0000; margin-bottom: 20px; min-height: 1.5em; }
         
-        .btn-container { display: flex; gap: 20px; align-items: center; justify-content: center; margin-top: 20px; min-height: 80px; }
+        /* الأزرار مخفية افتراضياً */
+        .btn-container { display: none; gap: 20px; align-items: center; justify-content: center; margin-top: 20px; min-height: 80px; }
         
-        button { padding: 15px 40px; background: none; border: 1px solid #ff0000; color: #fff; cursor: pointer; font-weight: bold; text-transform: uppercase; transition: transform 0.3s, opacity 0.3s; }
+        button { 
+            padding: 15px 40px; background: none; border: 1px solid #ff0000; color: #fff; cursor: pointer; font-weight: bold; text-transform: uppercase; 
+            transition: all 0.3s ease; display: inline-block; transform-origin: center;
+        }
         button:hover { background: #ff0000; box-shadow: 0 0 20px #ff0000; }
         
         input { background: none; border: 1px solid #ff0000; color: #fff; padding: 15px; text-align: center; font-size: 20px; margin-top: 20px; width: 200px; outline: none; }
@@ -26,10 +30,10 @@
         <h1 style="font-size: 100px;">❌</h1>
     </div>
 
-    <!-- Steps -->
     <div class="step active" id="s1">
         <h1 id="text1">If you are interested, continue until the end...</h1>
-        <div class="btn-container">
+        <!-- تم إضافة ID للتحكم في ظهور الأزرار -->
+        <div class="btn-container" id="btns1">
             <button id="btn-no" onclick="refuse()">Refuse</button>
             <button id="btn-yes" onclick="next(2)">Continue</button>
         </div>
@@ -61,6 +65,10 @@
             if (i < text.length) {
                 el.innerHTML += text.charAt(i) === '\n' ? '<br>' : text.charAt(i);
                 setTimeout(() => typeWriter(elementId, text, i + 1), 40);
+            } else {
+                // عند انتهاء الكتابة، نظهر الأزرار
+                const btns = document.getElementById('btns1');
+                if (btns) btns.style.display = 'flex';
             }
         }
 
@@ -75,39 +83,30 @@
             let yesBtn = document.getElementById('btn-yes');
             let noBtn = document.getElementById('btn-no');
             
-            // تكبير زر الاستمرار
             yesBtn.style.transform = `scale(${1 + refuseCount * 0.5})`;
             
-            // تصغير زر الرفض
             let newScale = 1 - (refuseCount * 0.3);
             noBtn.style.transform = `scale(${newScale})`;
-            noBtn.style.opacity = newScale;
+            noBtn.style.opacity = Math.max(0, newScale);
 
-            // الاختفاء بعد 3 ضغطات
             if (refuseCount >= 3) {
                 noBtn.style.display = 'none';
             }
         }
 
         function check() {
-            if (document.getElementById('pass').value === "0521") {
-                next(6);
-            } else {
-                showError();
-            }
+            if (document.getElementById('pass').value === "0521") next(6);
+            else showError();
         }
 
         function showError() {
             let overlay = document.getElementById('error-overlay');
             overlay.style.display = 'flex';
             document.body.classList.add('error-flash');
-            setTimeout(() => { 
-                overlay.style.display = 'none'; 
-                document.body.classList.remove('error-flash'); 
-            }, 800);
+            setTimeout(() => { overlay.style.display = 'none'; document.body.classList.remove('error-flash'); }, 800);
         }
         
-        // تشغيل أول نص
+        // نبدأ كتابة أول نص، وعندما ينتهي سيظهر زر الأزرار تلقائياً
         typeWriter('text1', texts[1]);
     </script>
 </body>
