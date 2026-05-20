@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>...........</title>
+    <title>S Y S T E M _ E N I G M A</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -16,9 +16,8 @@
         button { 
             padding: 15px 40px; background: none; border: 1px solid #ff0000; color: #fff; 
             cursor: pointer; font-weight: bold; text-transform: uppercase; 
-            transition: transform 0.4s ease, opacity 0.4s ease; 
+            transition: transform 0.4s ease; 
             display: inline-block;
-            flex-shrink: 0;
         }
         button:hover { background: #ff0000; box-shadow: 0 0 20px #ff0000; }
         
@@ -51,7 +50,6 @@
     <div class="step" id="s6"><h1 id="text6" style="line-height: 1.6; font-size: 18px;">Here you are… turning twenty-one.<br><br>It’s strange how quickly time passes, but your place in my heart doesn’t pass or change.<br><br>I’m truly grateful to have you in my life.<br><br>Happy birthday, Mohamed.<br><br>I wish you a year that feels worthy of your heart.</h1></div>
 
     <script>
-        let refuseCount = 0;
         const texts = {
             1: "If you are interested, continue until the end...",
             2: "Not surprising… I knew you would continue.",
@@ -78,14 +76,10 @@
         }
 
         function refuse() {
-            refuseCount++;
-            let yesBtn = document.getElementById('btn-yes');
-            let noBtn = document.getElementById('btn-no');
-            yesBtn.style.transform = `scale(${1 + refuseCount * 0.4})`;
-            let newScale = Math.max(0.1, 1 - (refuseCount * 0.3));
-            noBtn.style.transform = `scale(${newScale})`;
-            noBtn.style.opacity = newScale;
-            if (refuseCount >= 3) noBtn.style.display = 'none';
+            // إخفاء زر الرفض فوراً
+            document.getElementById('btn-no').style.display = 'none';
+            // تكبير زر الاستمرار لملء المساحة
+            document.getElementById('btn-yes').style.transform = "scale(1.8)";
         }
 
         function check() {
