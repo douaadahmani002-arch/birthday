@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>............</title>
+    <title>...........</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -11,12 +11,14 @@
         .active { display: flex; flex-direction: column; align-items: center; }
         h1 { font-size: 24px; text-shadow: 0 0 10px #ff0000; margin-bottom: 20px; min-height: 1.5em; }
         
-        /* الأزرار مخفية افتراضياً */
-        .btn-container { display: none; gap: 20px; align-items: center; justify-content: center; margin-top: 20px; min-height: 80px; }
+        .btn-container { display: none; gap: 40px; align-items: center; justify-content: center; margin-top: 30px; min-height: 100px; width: 100%; }
         
         button { 
-            padding: 15px 40px; background: none; border: 1px solid #ff0000; color: #fff; cursor: pointer; font-weight: bold; text-transform: uppercase; 
-            transition: all 0.3s ease; display: inline-block; transform-origin: center;
+            padding: 15px 40px; background: none; border: 1px solid #ff0000; color: #fff; 
+            cursor: pointer; font-weight: bold; text-transform: uppercase; 
+            transition: transform 0.4s ease, opacity 0.4s ease; 
+            display: inline-block;
+            flex-shrink: 0;
         }
         button:hover { background: #ff0000; box-shadow: 0 0 20px #ff0000; }
         
@@ -32,7 +34,6 @@
 
     <div class="step active" id="s1">
         <h1 id="text1">If you are interested, continue until the end...</h1>
-        <!-- تم إضافة ID للتحكم في ظهور الأزرار -->
         <div class="btn-container" id="btns1">
             <button id="btn-no" onclick="refuse()">Refuse</button>
             <button id="btn-yes" onclick="next(2)">Continue</button>
@@ -65,10 +66,8 @@
             if (i < text.length) {
                 el.innerHTML += text.charAt(i) === '\n' ? '<br>' : text.charAt(i);
                 setTimeout(() => typeWriter(elementId, text, i + 1), 40);
-            } else {
-                // عند انتهاء الكتابة، نظهر الأزرار
-                const btns = document.getElementById('btns1');
-                if (btns) btns.style.display = 'flex';
+            } else if (elementId === 'text1') {
+                document.getElementById('btns1').style.display = 'flex';
             }
         }
 
@@ -82,16 +81,11 @@
             refuseCount++;
             let yesBtn = document.getElementById('btn-yes');
             let noBtn = document.getElementById('btn-no');
-            
-            yesBtn.style.transform = `scale(${1 + refuseCount * 0.5})`;
-            
-            let newScale = 1 - (refuseCount * 0.3);
+            yesBtn.style.transform = `scale(${1 + refuseCount * 0.4})`;
+            let newScale = Math.max(0.1, 1 - (refuseCount * 0.3));
             noBtn.style.transform = `scale(${newScale})`;
-            noBtn.style.opacity = Math.max(0, newScale);
-
-            if (refuseCount >= 3) {
-                noBtn.style.display = 'none';
-            }
+            noBtn.style.opacity = newScale;
+            if (refuseCount >= 3) noBtn.style.display = 'none';
         }
 
         function check() {
@@ -106,7 +100,6 @@
             setTimeout(() => { overlay.style.display = 'none'; document.body.classList.remove('error-flash'); }, 800);
         }
         
-        // نبدأ كتابة أول نص، وعندما ينتهي سيظهر زر الأزرار تلقائياً
         typeWriter('text1', texts[1]);
     </script>
 </body>
