@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>S Y S T E M _ E N I G M A</title>
+    <title>.......</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
@@ -94,7 +94,6 @@
 
         button:hover{
             background:#ff0000;
-            transform:scale(1.08);
             box-shadow:
                 0 0 10px #ff0000,
                 0 0 30px #ff0000,
@@ -295,8 +294,6 @@ function next(n){
 
     const button = current.querySelector('button');
 
-    // نخفي الزر حتى تكمل الكتابة
-
     if(button && n !== 5){
         button.style.display = 'none';
     }
@@ -325,37 +322,19 @@ function next(n){
 
 // REFUSE BUTTON
 
-let refuseCount = 0;
-
-function refuse(){
+function refuse() {
 
     const noBtn = document.getElementById('btn-no');
-
     const yesBtn = document.getElementById('btn-yes');
 
-    refuseCount++;
+    // يخفي زر الرفض
+    noBtn.style.display = 'none';
 
-    // زر Continue يكبر
+    // يكبر زر Continue
+    yesBtn.style.transform = 'scale(1.8)';
 
-    yesBtn.style.transform =
-    `scale(${1 + refuseCount * 0.3})`;
-
-    // زر Refuse يصغر
-
-    const scale = 1 - (refuseCount * 0.25);
-
-    noBtn.style.transform = `scale(${scale})`;
-
-    noBtn.style.opacity = scale;
-
-    // بعد 3 مرات يختفي
-
-    if(refuseCount >= 3){
-
-        noBtn.style.display = 'none';
-
-    }
-
+    // يخليه في الوسط
+    document.getElementById('btns1').style.justifyContent = 'center';
 }
 
 
