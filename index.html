@@ -6,19 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; background-color: #000; color: #fff; overflow: hidden; height: 100vh; width: 100vw; display: flex; justify-content: center; align-items: center; transition: background 0.2s; }
-        .step { display: none; width: 100%; max-width: 600px; text-align: center; padding: 40px; position: absolute; animation: fadeIn 1s ease; }
+        body { margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; background-color: #000; color: #fff; height: 100vh; display: flex; justify-content: center; align-items: center; transition: background 0.2s; overflow: hidden; }
+        .step { display: none; width: 100%; max-width: 600px; text-align: center; padding: 40px; position: absolute; }
         .active { display: flex; flex-direction: column; align-items: center; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        h1 { font-size: 24px; text-shadow: 0 0 10px #ff0000; margin-bottom: 20px; }
-        button { margin-top: 30px; padding: 15px 40px; background: none; border: 1px solid #ff0000; color: #fff; cursor: pointer; font-weight: bold; text-transform: uppercase; transition: 0.3s; }
+        h1 { font-size: 24px; text-shadow: 0 0 10px #ff0000; margin-bottom: 20px; min-height: 1.5em; }
+        .btn-container { display: flex; gap: 20px; align-items: center; justify-content: center; margin-top: 20px; }
+        button { padding: 15px 40px; background: none; border: 1px solid #ff0000; color: #fff; cursor: pointer; font-weight: bold; text-transform: uppercase; transition: 0.3s; }
         button:hover { background: #ff0000; box-shadow: 0 0 20px #ff0000; }
         input { background: none; border: 1px solid #ff0000; color: #fff; padding: 15px; text-align: center; font-size: 20px; margin-top: 20px; width: 200px; outline: none; }
-        
-        /* تأثير الخطأ الكبير */
         .error-flash { background-color: #550000 !important; }
-        .error-text { font-size: 50px; color: #ff0000; font-weight: bold; display: none; }
     </style>
 </head>
 <body>
@@ -28,66 +24,69 @@
     </div>
 
     <div class="step active" id="s1">
-        <h1>If you are interested, continue until the end...</h1>
-        <button onclick="next(2)">Start</button>
+        <h1 id="text1">If you are interested, continue until the end...</h1>
+        <div class="btn-container">
+            <button id="btn-no" onclick="refuse()">Refuse</button>
+            <button id="btn-yes" onclick="next(2)">Continue</button>
+        </div>
     </div>
 
-    <div class="step" id="s2">
-        <h1>Not surprising… I knew you would continue.</h1>
-        <button onclick="next(3)">Continue</button>
-    </div>
-
-    <div class="step" id="s3">
-        <h1>You’re not just continuing now… you’re getting closer to understanding.</h1>
-        <button onclick="next(4)">Next</button>
-    </div>
-
-    <div class="step" id="s4">
-        <h1>Remember the solution to the riddle… you’ll need it.</h1>
-        <button onclick="next(5)">Proceed</button>
-    </div>
-
+    <div class="step" id="s2"><h1 id="text2">Not surprising… I knew you would continue.</h1><button onclick="next(3)">Continue</button></div>
+    <div class="step" id="s3"><h1 id="text3">You’re not just continuing now… you’re getting closer to understanding.</h1><button onclick="next(4)">Next</button></div>
+    <div class="step" id="s4"><h1 id="text4">Remember the solution to the riddle… you’ll need it.</h1><button onclick="next(5)">Proceed</button></div>
     <div class="step" id="s5">
         <h1>Enter the Enigma Password</h1>
         <input type="password" id="pass" placeholder="****">
         <button onclick="check()">Unlock</button>
     </div>
-
-    <div class="step" id="s6">
-        <h1 style="font-size: 20px; line-height: 1.6;">
-            Here you are… turning twenty-one.<br><br>
-            It’s strange how quickly time passes, but your place in my heart doesn’t pass or change.<br><br>
-            I’m truly grateful to have you in my life.<br><br>
-            Happy birthday, Mohamed.<br><br>
-            I wish you a year that feels worthy of your heart.
-        </h1>
-    </div>
+    <div class="step" id="s6"><h1 id="text6" style="line-height: 1.6; font-size: 18px;">Here you are… turning twenty-one.<br><br>It’s strange how quickly time passes, but your place in my heart doesn’t pass or change.<br><br>I’m truly grateful to have you in my life.<br><br>Happy birthday, Mohamed.<br><br>I wish you a year that feels worthy of your heart.</h1></div>
 
     <script>
+        let refuseCount = 0;
+        const texts = {
+            1: "If you are interested, continue until the end...",
+            2: "Not surprising… I knew you would continue.",
+            3: "You’re not just continuing now… you’re getting closer to understanding.",
+            4: "Remember the solution to the riddle… you’ll need it.",
+            6: "Here you are… turning twenty-one.\n\nIt’s strange how quickly time passes, but your place in my heart doesn’t pass or change.\n\nI’m truly grateful to have you in my life.\n\nHappy birthday, Mohamed.\n\nI wish you a year that feels worthy of your heart."
+        };
+        
+        function typeWriter(elementId, text, i = 0) {
+            if (i === 0) document.getElementById(elementId).innerHTML = "";
+            if (i < text.length) {
+                document.getElementById(elementId).innerHTML += text.charAt(i) === '\n' ? '<br>' : text.charAt(i);
+                setTimeout(() => typeWriter(elementId, text, i + 1), 40);
+            }
+        }
+
         function next(n) {
             document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
             document.getElementById('s' + n).classList.add('active');
+            if (texts[n]) typeWriter('text' + n, texts[n]);
+        }
+
+        function refuse() {
+            refuseCount++;
+            let yesBtn = document.getElementById('btn-yes');
+            let noBtn = document.getElementById('btn-no');
+            yesBtn.style.transform = `scale(${1 + refuseCount * 0.4})`;
+            if (refuseCount >= 3) noBtn.style.display = 'none';
         }
 
         function check() {
-            let p = document.getElementById('pass').value;
-            if (p === "0521") {
-                next(6);
-            } else {
-                showError();
-            }
+            if (document.getElementById('pass').value === "0521") next(6);
+            else showError();
         }
 
         function showError() {
             let overlay = document.getElementById('error-overlay');
             overlay.style.display = 'flex';
             document.body.classList.add('error-flash');
-            
-            setTimeout(() => {
-                overlay.style.display = 'none';
-                document.body.classList.remove('error-flash');
-            }, 800);
+            setTimeout(() => { overlay.style.display = 'none'; document.body.classList.remove('error-flash'); }, 800);
         }
+        
+        // Initial start
+        typeWriter('text1', texts[1]);
     </script>
 </body>
 </html>
