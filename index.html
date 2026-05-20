@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>[ SECURE SYSTEM ]</title>
+    <title>......</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -14,15 +14,14 @@
         button:hover { background: #ff0000; box-shadow: 0 0 20px #ff0000; }
         input { background: none; border: 1px solid #ff0000; color: #fff; padding: 15px; text-align: center; font-size: 20px; margin-top: 20px; width: 220px; outline: none; }
 
-        /* تأثير الدم الجديد */
-        #blood-screen {
-            position: fixed; top: -100%; left: 0; width: 100%; height: 100%;
-            background-color: #550000; z-index: 1000; 
-            transition: top 2s ease-in, opacity 2s ease-out;
-            opacity: 1;
+        /* تأثير الشاشة الحمراء الفجائية */
+        #flash-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #8b0000; z-index: 1000;
+            opacity: 0; pointer-events: none;
+            transition: opacity 2s ease-in-out;
         }
-        #blood-screen.dripping { top: 0; }
-        #blood-screen.fading { opacity: 0; }
+        #flash-screen.active-flash { opacity: 1; pointer-events: auto; }
 
         #error-overlay { position:fixed; top:0; left:0; width:100%; height:100%; display:none; justify-content:center; align-items:center; z-index:999; background: #800000; }
     </style>
@@ -30,7 +29,7 @@
 <body>
 
     <div id="error-overlay"><h1 style="font-size: 100px;">❌</h1></div>
-    <div id="blood-screen"></div>
+    <div id="flash-screen"></div>
 
     <div class="step active" id="s1">
         <h1>If you are interested, continue until the end...</h1>
@@ -77,28 +76,25 @@
         function check() {
             let p = document.getElementById('pass').value;
             if (p === "0521") {
-                triggerBloodEffect();
+                let flash = document.getElementById('flash-screen');
+                // 1. الشاشة تصبح حمراء فوراً
+                flash.classList.add('active-flash');
+                
+                // 2. نغير الصفحة في الخلفية بينما الشاشة حمراء
+                setTimeout(() => {
+                    next(6);
+                }, 1000);
+
+                // 3. الشاشة الحمراء تبدأ في التلاشي
+                setTimeout(() => {
+                    flash.classList.remove('active-flash');
+                }, 2000);
+
             } else {
                 let overlay = document.getElementById('error-overlay');
                 overlay.style.display = 'flex';
                 setTimeout(() => { overlay.style.display = 'none'; }, 800);
             }
-        }
-
-        function triggerBloodEffect() {
-            let blood = document.getElementById('blood-screen');
-            // 1. ينزل الدم
-            blood.classList.add('dripping');
-            
-            // 2. بعد نزوله (10 ثانية)، تتغير الصفحة في الخلف
-            setTimeout(() => {
-                next(6);
-            }, 2000);
-
-            // 3. بعد أن تظهر الصفحة في الخلف، يتلاشى الدم (يختفي)
-            setTimeout(() => {
-                blood.classList.add('fading');
-            }, 3000);
         }
     </script>
 </body>
