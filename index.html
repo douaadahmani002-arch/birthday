@@ -7,43 +7,99 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body { margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; background-color: #000; color: #fff; overflow: hidden; height: 100vh; width: 100vw; display: flex; justify-content: center; align-items: center; }
-        
-        .step { display: none; width: 100%; max-width: 600px; text-align: center; padding: 40px; position: absolute; animation: fadeIn 1s ease; z-index: 1; }
+        .step { display: none; width: 100%; max-width: 600px; text-align: center; padding: 40px; position: absolute; z-index: 1; }
         .active { display: flex; flex-direction: column; align-items: center; }
-        
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
         h1 { font-size: 24px; text-shadow: 0 0 10px #ff0000; margin-bottom: 20px; line-height: 1.5; }
-        
-        button { margin-top: 30px; padding: 15px 40px; background: none; border: 1px solid #ff0000; color: #fff; cursor: pointer; font-weight: bold; text-transform: uppercase; transition: 0.3s; letter-spacing: 2px; }
+        button { margin-top: 30px; padding: 15px 40px; background: none; border: 1px solid #ff0000; color: #fff; cursor: pointer; font-weight: bold; text-transform: uppercase; transition: 0.3s; }
         button:hover { background: #ff0000; box-shadow: 0 0 20px #ff0000; }
-        
         input { background: none; border: 1px solid #ff0000; color: #fff; padding: 15px; text-align: center; font-size: 20px; margin-top: 20px; width: 220px; outline: none; }
 
-        /* تأثير الخطأ الكبير */
-        #error-overlay { position:fixed; top:0; left:0; width:100%; height:100%; display:none; justify-content:center; align-items:center; z-index:999; background: #800000; }
-
-        /* تأثير نزول الدم */
+        /* تأثير الدم الجديد */
         #blood-screen {
             position: fixed; top: -100%; left: 0; width: 100%; height: 100%;
-            background-color: #660000; z-index: 1000; transition: top 1.5s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+            background-color: #550000; z-index: 1000; 
+            transition: top 2s ease-in, opacity 2s ease-out;
+            opacity: 1;
         }
         #blood-screen.dripping { top: 0; }
+        #blood-screen.fading { opacity: 0; }
 
-        /* تزيين قطرات الدم */
-        .drop { position: absolute; bottom: -50px; width: 10%; height: 100px; background: #660000; border-radius: 0 0 50% 50%; }
+        #error-overlay { position:fixed; top:0; left:0; width:100%; height:100%; display:none; justify-content:center; align-items:center; z-index:999; background: #800000; }
     </style>
 </head>
 <body>
 
-    <div id="error-overlay">
-        <h1 style="font-size: 100px;">❌</h1>
+    <div id="error-overlay"><h1 style="font-size: 100px;">❌</h1></div>
+    <div id="blood-screen"></div>
+
+    <div class="step active" id="s1">
+        <h1>If you are interested, continue until the end...</h1>
+        <button onclick="next(2)">Start</button>
     </div>
 
-    <div id="blood-screen">
-        <div class="drop" style="left: 0; height: 120px;"></div>
-        <div class="drop" style="left: 15%; height: 180px;"></div>
-        <div class="drop" style="left: 30%; height: 140px;"></div>
-        <div class="drop" style="left: 45%; height: 200px;"></div>
-        <div class="drop" style="left: 60%; height: 160px;"></div>
-        <div class
+    <div class="step" id="s2">
+        <h1>Not surprising… I knew you would continue.</h1>
+        <button onclick="next(3)">Continue</button>
+    </div>
+
+    <div class="step" id="s3">
+        <h1>You’re not just continuing now… you’re getting closer to understanding.</h1>
+        <button onclick="next(4)">Next</button>
+    </div>
+
+    <div class="step" id="s4">
+        <h1>Remember the solution to the riddle… you’ll need it.</h1>
+        <button onclick="next(5)">Proceed</button>
+    </div>
+
+    <div class="step" id="s5">
+        <h1>Enter the Enigma Password</h1>
+        <input type="password" id="pass" placeholder="****">
+        <button onclick="check()">Unlock</button>
+    </div>
+
+    <div class="step" id="s6">
+        <h1 style="font-size: 19px; line-height: 1.8; text-shadow: none;">
+            Here you are… turning twenty-one.<br><br>
+            It’s strange how quickly time passes, but your place in my heart doesn’t pass or change.<br><br>
+            I’m truly grateful to have you in my life.<br><br>
+            <span style="color: #ff0000; font-size: 26px; font-weight: bold;">Happy birthday, Mohamed.</span><br><br>
+            I wish you a year that feels worthy of your heart.
+        </h1>
+    </div>
+
+    <script>
+        function next(n) {
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById('s' + n).classList.add('active');
+        }
+
+        function check() {
+            let p = document.getElementById('pass').value;
+            if (p === "0521") {
+                triggerBloodEffect();
+            } else {
+                let overlay = document.getElementById('error-overlay');
+                overlay.style.display = 'flex';
+                setTimeout(() => { overlay.style.display = 'none'; }, 800);
+            }
+        }
+
+        function triggerBloodEffect() {
+            let blood = document.getElementById('blood-screen');
+            // 1. ينزل الدم
+            blood.classList.add('dripping');
+            
+            // 2. بعد نزوله (10 ثانية)، تتغير الصفحة في الخلف
+            setTimeout(() => {
+                next(6);
+            }, 2000);
+
+            // 3. بعد أن تظهر الصفحة في الخلف، يتلاشى الدم (يختفي)
+            setTimeout(() => {
+                blood.classList.add('fading');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
